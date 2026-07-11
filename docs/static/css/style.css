@@ -1,0 +1,55 @@
+body {
+    background-color: #FFFFFF;
+    color: #1E293B;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #E2E8F0;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #CBD5E1;
+}
+
+/* GSAP handles scroll animations dynamically, no CSS transitions needed here */
+
+/* Typography Enhancements */
+.text-gradient {
+    color: #1D4ED8;
+}
+
+/* Navigation Link Underline Animation */
+.nav-link {
+    position: relative;
+    padding-bottom: 4px;
+}
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #2563EB; /* Tailwind blue-600 */
+    transition: width 0.3s ease-in-out;
+    border-radius: 2px;
+}
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
+}
+.nav-link.active {
+    color: #111827; /* Tailwind gray-900 */
+    font-weight: 600;
+}
