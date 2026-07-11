@@ -1,0 +1,44 @@
+{% load static %}
+<nav class="fixed w-full z-40 top-0 transition-all duration-300 bg-transparent border-b border-transparent h-16 flex items-center" id="navbar" aria-label="Main Navigation">
+    <div class="max-w-6xl mx-auto px-6 w-full flex justify-between items-center relative">
+        <!-- Logo -->
+        <a href="{% url 'home' %}" class="text-[15px] font-bold tracking-tight text-gray-900 flex items-center gap-2 z-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-md" aria-label="Arjav Dosi Home">
+            <span class="w-6 h-6 rounded bg-blue-600 flex items-center justify-center text-white text-[11px] font-semibold" aria-hidden="true">A</span>
+            Arjav
+        </a>
+        
+        <!-- Navigation (Centered Desktop) -->
+        <div class="hidden md:flex items-center gap-8 text-[13px] font-medium text-gray-500 absolute left-1/2 transform -translate-x-1/2" role="menubar">
+            <a href="#about" class="nav-link hover:text-gray-900 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-sm" role="menuitem">About</a>
+            <a href="#skills" class="nav-link hover:text-gray-900 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-sm" role="menuitem">Skills</a>
+            <a href="#projects" class="nav-link hover:text-gray-900 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-sm" role="menuitem">Projects</a>
+            <a href="#experience" class="nav-link hover:text-gray-900 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-sm" role="menuitem">Experience</a>
+            <a href="#contact" class="nav-link hover:text-gray-900 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-sm" role="menuitem">Contact</a>
+        </div>
+        
+        <!-- Resume Button Desktop -->
+        <a href="{% static 'resume/Arjav_Dosi_Resume.pdf' %}" target="_blank" rel="noopener noreferrer" class="hidden md:block px-6 py-2.5 rounded-xl text-[13px] font-medium text-white bg-gray-900 hover:bg-black transition-all duration-200 hover:-translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-900" aria-label="Download Resume">
+            Resume
+        </a>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button id="mobile-menu-button" class="md:hidden p-2 -mr-2 text-gray-600 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-md z-50 transition-colors duration-200" aria-label="Toggle mobile menu" aria-expanded="false">
+            <svg id="menu-icon-open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            <svg id="menu-icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+    </div>
+</nav>
+
+<!-- Mobile Navigation Menu Overlay -->
+<div id="mobile-menu" class="fixed inset-0 z-30 bg-white/95 backdrop-blur-sm transform -translate-y-full transition-transform duration-300 ease-in-out md:hidden flex flex-col pt-24 px-8 shadow-2xl">
+    <div class="flex flex-col gap-6 text-center">
+        <a href="#about" class="text-2xl font-bold text-gray-900 hover:text-blue-600 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-md mobile-link">About</a>
+        <a href="#skills" class="text-2xl font-bold text-gray-900 hover:text-blue-600 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-md mobile-link">Skills</a>
+        <a href="#projects" class="text-2xl font-bold text-gray-900 hover:text-blue-600 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-md mobile-link">Projects</a>
+        <a href="#experience" class="text-2xl font-bold text-gray-900 hover:text-blue-600 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-md mobile-link">Experience</a>
+        <a href="#contact" class="text-2xl font-bold text-gray-900 hover:text-blue-600 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-md mobile-link">Contact</a>
+        <div class="mt-8">
+            <a href="{% static 'resume/Arjav_Dosi_Resume.pdf' %}" target="_blank" rel="noopener noreferrer" class="inline-block w-full py-4 rounded-2xl text-base font-bold text-white bg-gray-900 hover:bg-black active:bg-gray-800 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-900 mobile-link">Download Resume</a>
+        </div>
+    </div>
+</div>
