@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-x^qf+@c*pk9e&tkf49_yn92yh1t4f%ab&3wo*b7i#mo=z35j%m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["arjav-dosi.onrender.com"]
 
 
 # Application definition
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -125,6 +126,9 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Email Backend Configuration (Gmail SMTP)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

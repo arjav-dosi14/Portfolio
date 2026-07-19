@@ -1,0 +1,276 @@
+/* --- RETRO DESKTOP REDESIGN CSS --- */
+
+:root {
+    --retro-cream: #f4eee0;
+    --retro-cream-light: #fdfbf7;
+    --retro-olive: #6b705c;
+    --retro-olive-dark: #3f4236;
+    --retro-text: #2f2f2f;
+    --retro-border: #4b5563; /* Dark gray for window borders */
+    --retro-window-bg: #fdfbf7;
+    --retro-grid: rgba(107, 112, 92, 0.12); /* Olive tinted grid */
+}
+
+/* 1. Global Background & Texture */
+body {
+    background-color: var(--retro-cream) !important;
+    background-image: 
+        linear-gradient(var(--retro-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--retro-grid) 1px, transparent 1px) !important;
+    background-size: 24px 24px !important;
+    color: var(--retro-text) !important;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Force sections to be transparent to show grid */
+section.bg-white, 
+section.bg-slate-50, 
+.bg-gradient-to-b {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+}
+
+/* 2. Scrollbar Styling (Retro-fied) */
+::-webkit-scrollbar {
+    width: 12px;
+}
+::-webkit-scrollbar-track {
+    background: var(--retro-cream);
+    border-left: 1px solid var(--retro-border);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--retro-olive);
+    border: 2px solid var(--retro-cream);
+    border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--retro-olive-dark);
+}
+
+/* Typography Enhancements */
+.text-gradient {
+    color: var(--retro-olive) !important;
+    background: none !important;
+    -webkit-text-fill-color: var(--retro-olive) !important;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--retro-olive-dark) !important;
+}
+
+/* 3. Retro Window Cards Base Styles */
+#home .reveal > div, /* Avatar Card */
+#about .grid > div > div, /* About Feature Boxes */
+#skills .skills-outer-grid > div, /* Skill Categories */
+#projects .grid > div, /* Project Cards */
+#education .grid > div > div, /* Education Cards */
+#contact form, /* Contact Form Container */
+#contact .contact-info-window /* Contact Info Panel */
+{
+    background-color: var(--retro-window-bg) !important;
+    border: 2px solid var(--retro-border) !important;
+    border-radius: 8px !important;
+    box-shadow: 4px 4px 0px rgba(75, 85, 99, 0.2) !important;
+    position: relative;
+    overflow: visible !important;
+}
+
+/* Add padding top to make room for fake title bars */
+#projects .grid > div { padding-top: 24px !important; }
+#home .reveal > div { padding-top: 36px !important; }
+#about .grid > div > div { padding-top: 24px !important; }
+#skills .skills-outer-grid > div { padding-top: 24px !important; }
+#education .grid > div > div { padding-top: 24px !important; }
+#contact form, #contact .contact-info-window { padding-top: 60px !important; }
+
+/* 4. Fake Window Title Bars using ::before */
+#home .reveal > div::before,
+#about .grid > div > div::before,
+#skills .skills-outer-grid > div::before,
+#projects .grid > div::before,
+#education .grid > div > div::before,
+#contact form::before,
+#contact .contact-info-window::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    height: 24px;
+    background-color: var(--retro-olive);
+    border: 2px solid var(--retro-border);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom: 2px solid var(--retro-border);
+    z-index: 10;
+}
+#home .reveal > div::before, #contact form::before, #contact .contact-info-window::before { height: 28px; }
+
+/* Window Close Buttons using ::after */
+#home .reveal > div::after,
+#about .grid > div > div:not(.no-close-button)::after,
+#skills .skills-outer-grid > div::after,
+#projects .grid > div::after,
+#education .grid > div > div::after,
+#contact form::after,
+#contact .contact-info-window::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    right: 8px;
+    width: 12px;
+    height: 12px;
+    background-color: #ff5f56;
+    border: 2px solid var(--retro-border);
+    border-radius: 50%;
+    z-index: 11;
+}
+#home .reveal > div::after, #contact form::after, #contact .contact-info-window::after { top: 6px; right: 10px; width: 14px; height: 14px; }
+
+/* Project Cards Specific Fixes */
+#projects .grid > div > div:first-child {
+    border-bottom: 2px solid var(--retro-border) !important;
+    border-radius: 0 !important;
+    position: relative;
+    z-index: 1;
+}
+
+/* 5. Buttons and Links */
+a.bg-gray-900, button.bg-gray-900,
+a.bg-white.border, button.bg-white.border,
+input[type="submit"], button[type="submit"] {
+    background-color: var(--retro-window-bg) !important;
+    border: 2px solid var(--retro-border) !important;
+    color: var(--retro-border) !important;
+    border-radius: 6px !important;
+    box-shadow: 2px 2px 0px rgba(75, 85, 99, 0.4) !important;
+    font-weight: 700 !important;
+    transition: all 0.1s ease !important;
+    transform: none !important;
+}
+
+a.bg-gray-900:hover, button.bg-gray-900:hover,
+a.bg-white.border:hover, button.bg-white.border:hover,
+input[type="submit"]:hover, button[type="submit"]:hover {
+    background-color: var(--retro-cream) !important;
+    box-shadow: 1px 1px 0px rgba(75, 85, 99, 0.4) !important;
+    transform: translate(1px, 1px) !important;
+}
+
+a.bg-gray-900:active, button.bg-gray-900:active,
+a.bg-white.border:active, button.bg-white.border:active,
+input[type="submit"]:active, button[type="submit"]:active {
+    box-shadow: 0px 0px 0px rgba(75, 85, 99, 0.4) !important;
+    transform: translate(2px, 2px) !important;
+}
+
+/* 6. Tech Pills & Badges */
+.px-3\.5.py-1\.5.bg-white.border,
+.px-2\.5.py-1.bg-gray-50.border {
+    background-color: var(--retro-cream) !important;
+    border: 2px solid var(--retro-border) !important;
+    border-radius: 4px !important;
+    color: var(--retro-olive-dark) !important;
+    box-shadow: 1px 1px 0px rgba(75, 85, 99, 0.2) !important;
+    font-weight: 600 !important;
+}
+.rounded-full.bg-gray-400 {
+    background-color: var(--retro-olive) !important;
+}
+
+/* Input Fields (Contact Form) */
+input[type="text"], input[type="email"], textarea {
+    background-color: var(--retro-window-bg) !important;
+    border: 2px solid var(--retro-border) !important;
+    border-radius: 4px !important;
+    box-shadow: inset 2px 2px 0px rgba(75, 85, 99, 0.1) !important;
+    color: var(--retro-text) !important;
+}
+input:focus, textarea:focus {
+    outline: none !important;
+    border-color: var(--retro-olive-dark) !important;
+    box-shadow: inset 2px 2px 0px rgba(75, 85, 99, 0.2) !important;
+}
+
+/* 7. Loading Screen */
+#loading-screen {
+    background-color: var(--retro-cream) !important;
+    background-image: 
+        linear-gradient(var(--retro-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--retro-grid) 1px, transparent 1px) !important;
+    background-size: 24px 24px !important;
+}
+#loading-progress {
+    background-color: var(--retro-olive) !important;
+}
+#loading-screen .w-\[180px\] {
+    border: 2px solid var(--retro-border) !important;
+    background-color: var(--retro-window-bg) !important;
+    border-radius: 4px !important;
+    height: 8px !important;
+}
+
+/* 8. Navbar / Navigation Links */
+#navbar {
+    background-color: rgba(244, 238, 224, 0.9) !important;
+    border-bottom: 2px solid var(--retro-border) !important;
+    backdrop-filter: blur(4px);
+}
+.nav-link {
+    position: relative;
+}
+.nav-link.active {
+    color: var(--retro-olive-dark) !important;
+    font-weight: 600;
+}
+
+/* Global Color & Border Overrides */
+.border-white.bg-gray-300 {
+    border-color: var(--retro-border) !important;
+    background-color: var(--retro-cream) !important;
+}
+.ring-gray-50 {
+    --tw-ring-color: transparent !important;
+}
+.border-\[4px\].border-white {
+    border-color: var(--retro-window-bg) !important;
+}
+.ring-gray-100\/50 {
+    --tw-ring-color: var(--retro-border) !important;
+}
+.from-blue-400, .to-blue-700 {
+    --tw-gradient-from: var(--retro-olive) !important;
+    --tw-gradient-stops: var(--tw-gradient-from), var(--retro-olive) !important;
+}
+.text-blue-600 {
+    color: var(--retro-olive) !important;
+}
+.bg-blue-600 {
+    background-color: var(--retro-olive) !important;
+}
+
+/* Folder Tabs / Small Badges Fixes */
+.bg-yellow-100.text-yellow-700 {
+    background-color: #ffd166 !important;
+    color: #4a3f1d !important;
+    border: 1px solid var(--retro-border) !important;
+    box-shadow: 1px 1px 0 rgba(75, 85, 99, 0.2) !important;
+}
+
+/* Scroll Reveal Animations */
+.scroll-child-init {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    will-change: opacity, transform;
+}
+.scroll-child-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
