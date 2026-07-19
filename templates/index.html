@@ -3,82 +3,466 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section id="home" class="pt-32 pb-24 bg-white relative overflow-hidden" aria-label="Hero">
+<section id="home" class="pt-24 md:pt-32 pb-6 md:pb-10 lg:pb-12 bg-white relative overflow-hidden" aria-label="Hero">
+    <style>
+        @keyframes subtle-float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-4px);
+            }
+        }
+
+        .animate-subtle-float {
+            animation: subtle-float 5s ease-in-out infinite;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const heroSection = document.getElementById('home');
+
+            if (window.matchMedia('(hover: hover) and (pointer: fine)').matches && heroSection) {
+                let currentX = window.innerWidth / 2;
+                let currentY = window.innerHeight / 2;
+                let targetX = currentX;
+                let targetY = currentY;
+                let isHovering = false;
+                let currentOpacity = 0;
+                let targetOpacity = 0;
+
+                heroSection.addEventListener('mousemove', (e) => {
+                    const rect = heroSection.getBoundingClientRect();
+                    targetX = e.clientX - rect.left;
+                    targetY = e.clientY - rect.top;
+                    targetOpacity = 0.15;
+                    if (!isHovering) {
+                        currentX = targetX;
+                        currentY = targetY;
+                        isHovering = true;
+                    }
+                });
+
+                heroSection.addEventListener('mouseleave', () => {
+                    targetOpacity = 0;
+                    isHovering = false;
+                });
+
+                function animateSpotlight() {
+                    currentX += (targetX - currentX) * 0.08;
+                    currentY += (targetY - currentY) * 0.08;
+                    currentOpacity += (targetOpacity - currentOpacity) * 0.08;
+
+                    if (currentOpacity > 0.001) {
+                        heroSection.style.background = `radial-gradient(circle 450px at ${currentX}px ${currentY}px, rgba(59, 130, 246, ${currentOpacity}) 0%, transparent 100%), #ffffff`;
+                    } else {
+                        heroSection.style.background = '';
+                    }
+
+                    requestAnimationFrame(animateSpotlight);
+                }
+
+                animateSpotlight();
+
+                // Developer Playground Interactive Code
+                const playground = document.querySelector('.right-side-playground');
+                if (playground) {
+                    const items = playground.querySelectorAll('.playground-item');
+                    let pMouseX = 0;
+                    let pMouseY = 0;
+                    let isHoveringPlayground = false;
+
+                    playground.addEventListener('mousemove', (e) => {
+                        const rect = playground.getBoundingClientRect();
+                        pMouseX = e.clientX - rect.left - rect.width / 2;
+                        pMouseY = e.clientY - rect.top - rect.height / 2;
+                        isHoveringPlayground = true;
+                    });
+
+                    playground.addEventListener('mouseleave', () => {
+                        isHoveringPlayground = false;
+                        pMouseX = 0;
+                        pMouseY = 0;
+                    });
+
+                    function animatePlayground() {
+                        items.forEach(item => {
+                            const speed = parseFloat(item.getAttribute('data-speed') || '0.05');
+                            let currentX = parseFloat(item.dataset.x || '0');
+                            let currentY = parseFloat(item.dataset.y || '0');
+                            
+                            let targetX = isHoveringPlayground ? pMouseX * speed : 0;
+                            let targetY = isHoveringPlayground ? pMouseY * speed : 0;
+
+                            const maxDist = 10;
+                            if (targetX > maxDist) targetX = maxDist;
+                            if (targetX < -maxDist) targetX = -maxDist;
+                            if (targetY > maxDist) targetY = maxDist;
+                            if (targetY < -maxDist) targetY = -maxDist;
+
+                            currentX += (targetX - currentX) * 0.1;
+                            currentY += (targetY - currentY) * 0.1;
+
+                            item.dataset.x = currentX;
+                            item.dataset.y = currentY;
+
+                            item.style.transform = `translate(${currentX}px, ${currentY}px)`;
+                        });
+                        requestAnimationFrame(animatePlayground);
+                    }
+                    animatePlayground();
+                }
+            }
+        });
+    </script>
     <!-- Removed glowing background to ground the hero -->
-    <div class="max-w-6xl mx-auto px-6 grid lg:grid-cols-[1.2fr_0.8fr] gap-16 items-center">
+    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-2 md:gap-8 lg:gap-16 items-center relative">
         <!-- Left Side -->
         <div class="reveal-left">
-            <h1 class="text-[3.5rem] md:text-[4.75rem] font-bold tracking-tight mb-4 text-gray-800 leading-[1.1]">
+            <h1
+                class="text-4xl sm:text-5xl md:text-[4.75rem] font-extrabold tracking-tighter mb-3 md:mb-5 text-gray-800 leading-[1.1] md:leading-[1.05]">
                 Hi, I'm <br />
                 <span class="text-gradient">Arjav Dosi</span>
             </h1>
-            <p class="text-xl md:text-2xl text-gray-500 font-semibold tracking-tight mb-8">
-                Python & Django Developer
+            <p class="text-[1.1rem] md:text-[1.35rem] text-gray-500 font-medium tracking-wide mb-4 md:mb-6">
+                Computer Science & Engineering Undergraduate
             </p>
-            <p class="text-base md:text-lg text-gray-500 max-w-lg mb-10 leading-[1.7]">
-                I build responsive web applications using Python and Django, focusing on clean UI, secure backend
-                development, and creating user-friendly digital experiences.
+            <p class="text-[14px] md:text-[1.1rem] text-gray-500 max-w-[280px] sm:max-w-[380px] md:max-w-[540px] mb-8 md:mb-12 leading-relaxed font-light">
+                I am a Computer Science undergraduate who enjoys building practical software and web applications. I focus on writing clean code, solving complex problems, and turning ideas into functional digital experiences.
             </p>
 
-            <div class="flex flex-col sm:flex-row gap-4 mb-12 w-full sm:w-auto">
+            <div class="flex flex-col sm:flex-row gap-3 md:gap-4 mb-8 md:mb-14 w-full sm:w-auto">
                 <a href="#projects"
-                    class="w-full sm:w-auto text-center bg-gray-900 hover:bg-black text-white px-6 py-2.5 rounded-xl text-[14px] font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-900">
+                    class="w-full sm:w-auto text-center bg-gray-900 hover:bg-black text-white px-7 py-2.5 md:py-3 rounded-xl text-[14px] font-semibold tracking-wide transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-900 shadow-sm hover:shadow-md">
                     View Projects
                 </a>
                 <a href="#contact"
-                    class="w-full sm:w-auto text-center bg-white border border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50 px-6 py-2.5 rounded-xl text-[14px] font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-900">
+                    class="w-full sm:w-auto text-center bg-white border border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50 px-7 py-2.5 md:py-3 rounded-xl text-[14px] font-semibold tracking-wide transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-900 shadow-sm hover:shadow-md">
                     Contact Me
                 </a>
             </div>
 
             <!-- Tech Pills -->
-            <div class="flex flex-wrap gap-2.5">
+            <div class="flex flex-wrap gap-2 md:gap-3">
                 <span
-                    class="flex items-center gap-1.5 px-3 py-1 bg-white border border-gray-200 rounded-md text-xs font-medium text-gray-600">
+                    class="flex items-center gap-2 px-2.5 py-1 md:px-3.5 md:py-1.5 bg-white border border-gray-200 rounded-md text-[12px] md:text-[13px] font-medium text-gray-600 shadow-sm">
                     <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span> Python
                 </span>
                 <span
-                    class="flex items-center gap-1.5 px-3 py-1 bg-white border border-gray-200 rounded-md text-xs font-medium text-gray-600">
-                    <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span> Django
-                </span>
-                <span
-                    class="flex items-center gap-1.5 px-3 py-1 bg-white border border-gray-200 rounded-md text-xs font-medium text-gray-600">
+                    class="flex items-center gap-2 px-2.5 py-1 md:px-3.5 md:py-1.5 bg-white border border-gray-200 rounded-md text-[12px] md:text-[13px] font-medium text-gray-600 shadow-sm">
                     <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span> Java
                 </span>
                 <span
-                    class="flex items-center gap-1.5 px-3 py-1 bg-white border border-gray-200 rounded-md text-xs font-medium text-gray-600">
+                    class="flex items-center gap-2 px-2.5 py-1 md:px-3.5 md:py-1.5 bg-white border border-gray-200 rounded-md text-[12px] md:text-[13px] font-medium text-gray-600 shadow-sm">
+                    <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span> C++
+                </span>
+                <span
+                    class="flex items-center gap-2 px-2.5 py-1 md:px-3.5 md:py-1.5 bg-white border border-gray-200 rounded-md text-[12px] md:text-[13px] font-medium text-gray-600 shadow-sm">
                     <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span> MySQL
                 </span>
             </div>
         </div>
 
-        <!-- Right Side: Professional Profile Card -->
-        <div class="reveal flex justify-center lg:justify-end">
-            <div
-                class="w-full max-w-[320px] bg-white rounded-2xl border border-gray-200 shadow-premium p-10 flex flex-col items-center text-center relative hover:shadow-premium-hover transition-shadow duration-500">
-                <!-- Avatar -->
-                <div id="interactive-avatar" style="perspective: 1000px; transform-style: preserve-3d;"
-                    class="w-40 h-40 sm:w-48 sm:h-48 rounded-full mb-6 shadow-lg shadow-blue-900/10 border-4 border-white ring-1 ring-gray-100 flex-shrink-0 will-change-transform animate-[float_6s_ease-in-out_infinite]">
-                    <img src="{% static 'images/avatar.png' %}" alt="Arjav Dosi Profile Picture" loading="eager"
-                        class="w-full h-full object-cover rounded-full pointer-events-none">
+        <!-- Right Side (Developer Playground) -->
+        <div class="block relative w-full h-[260px] md:h-[400px] lg:h-[500px] right-side-playground z-10 transform scale-[0.85] md:scale-100 origin-top mt-4 md:mt-0" style="perspective: 1000px;">
+            <!-- Connection Lines (SVG) -->
+            <svg class="absolute inset-0 w-full h-full pointer-events-none z-0" preserveAspectRatio="xMidYMid slice">
+                <style>
+                    .conn-line { fill: none; stroke: #9ca3af; stroke-width: 1px; stroke-dasharray: 4 4; animation: pulse-line 4s infinite alternate ease-in-out; }
+                    @keyframes pulse-line { 0% { opacity: 0.1; } 100% { opacity: 0.3; } }
+                    .tablet-hidden-line { opacity: 0; transition: opacity 0.3s; }
+                    @media (min-width: 1024px) { .tablet-hidden-line { opacity: 1; } }
+                </style>
+                <path class="conn-line reveal" style="animation-delay: 1.1s;" d="M120,80 Q250,150 380,100" />
+                <path class="conn-line tablet-hidden-line reveal" style="animation-delay: 1.3s;" d="M380,100 Q400,250 300,380" />
+                <path class="conn-line tablet-hidden-line reveal" style="animation-delay: 1.5s;" d="M120,80 Q100,250 180,350" />
+                <path class="conn-line reveal" style="animation-delay: 1.7s;" d="M180,350 Q250,300 300,380" />
+            </svg>
+
+            <!-- Particles Container -->
+            <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+                <div class="absolute w-1.5 h-1.5 bg-blue-400 rounded-full blur-[1px] opacity-30 animate-subtle-float top-[20%] left-[30%]" style="animation-duration: 7s;"></div>
+                <div class="absolute w-1.5 h-1.5 bg-green-400 rounded-full blur-[1px] opacity-30 animate-subtle-float top-[70%] left-[80%] hidden lg:block" style="animation-duration: 6s; animation-delay: 1s;"></div>
+                <div class="absolute w-1 h-1 bg-yellow-400 rounded-full blur-[1px] opacity-30 animate-subtle-float top-[40%] left-[70%]" style="animation-duration: 8s; animation-delay: 2s;"></div>
+                <div class="absolute w-2 h-2 bg-purple-400 rounded-full blur-[2px] opacity-20 animate-subtle-float top-[80%] left-[20%]" style="animation-duration: 9s; animation-delay: 3s;"></div>
+                <div class="absolute w-1.5 h-1.5 bg-gray-400 rounded-full blur-[1px] opacity-30 animate-subtle-float top-[15%] left-[85%] hidden lg:block" style="animation-duration: 5s; animation-delay: 1.5s;"></div>
+            </div>
+
+            <!-- Premium Startup Animations -->
+            <style>
+                /* Base element hides until animation begins */
+                .anim-startup-pop, .anim-startup-slide-right, .anim-startup-slide-up, .anim-startup-terminal, .anim-startup-icon {
+                    opacity: 0;
+                    will-change: transform, opacity;
+                }
+                
+                /* 1. Python Window: Pop into place */
+                @keyframes startupPop {
+                    0% { opacity: 0; transform: scale(0.9); }
+                    70% { opacity: 1; transform: scale(1.02); }
+                    100% { opacity: 1; transform: scale(1); }
+                }
+                .anim-startup-pop {
+                    animation: startupPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+                    animation-delay: 0.7s;
+                }
+
+                /* 2. SQL Window: Slide from right */
+                @keyframes startupSlideRight {
+                    0% { opacity: 0; transform: translateX(30px); }
+                    100% { opacity: 1; transform: translateX(0); }
+                }
+                .anim-startup-slide-right {
+                    animation: startupSlideRight 0.4s ease-out forwards;
+                    animation-delay: 0.9s;
+                }
+
+                /* 3. CSS Window: Slide upward */
+                @keyframes startupSlideUp {
+                    0% { opacity: 0; transform: translateY(30px); }
+                    100% { opacity: 1; transform: translateY(0); }
+                }
+                .anim-startup-slide-up {
+                    animation: startupSlideUp 0.4s ease-out forwards;
+                    animation-delay: 1.1s;
+                }
+
+                /* 4. Terminal Window: Stronger slide & pop */
+                @keyframes startupTerminal {
+                    0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+                    100% { opacity: 1; transform: translateY(0) scale(1); }
+                }
+                .anim-startup-terminal {
+                    animation: startupTerminal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+                    animation-delay: 1.3s;
+                }
+
+                /* Terminal Typing Animation */
+                .terminal-typing-container {
+                    display: inline-flex;
+                    align-items: center;
+                }
+                .terminal-typing {
+                    display: inline-block;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    width: 0;
+                    border-right: 0.5em solid transparent;
+                    vertical-align: text-bottom;
+                    line-height: 1.2;
+                    animation: 
+                        typing 0.9s steps(23, end) forwards,
+                        cursor-lifecycle 1.4s forwards;
+                    animation-delay: 1.6s, 1.6s;
+                }
+                @keyframes typing {
+                    from { width: 0; }
+                    to { width: 100%; }
+                }
+                @keyframes cursor-lifecycle {
+                    0%, 95% { border-right-color: #4ade80; }
+                    100% { border-right-color: transparent; }
+                }
+                .terminal-result {
+                    opacity: 0;
+                    white-space: nowrap;
+                    animation: fadeInResult 0.1s forwards;
+                    animation-delay: 2.9s;
+                }
+                @keyframes fadeInResult {
+                    to { opacity: 1; }
+                }
+                .terminal-prompt {
+                    opacity: 0;
+                    display: flex;
+                    align-items: center;
+                    animation: fadeInPrompt 0.1s forwards;
+                    animation-delay: 3.0s;
+                }
+                @keyframes fadeInPrompt {
+                    to { opacity: 1; }
+                }
+                .terminal-cursor {
+                    display: inline-block;
+                    width: 0.5em;
+                    height: 1.1em;
+                    background-color: #4ade80;
+                    vertical-align: text-bottom;
+                    animation: blink-infinite 1s step-end infinite;
+                }
+                @keyframes blink-infinite {
+                    0%, 100% { opacity: 1; }
+                    50% { opacity: 0; }
+                }
+
+                /* 5. Floating Tech Icons */
+                @keyframes startupIcon {
+                    0% { opacity: 0; transform: scale(0.5); }
+                    100% { opacity: 1; transform: scale(1); }
+                }
+                .anim-startup-icon {
+                    animation: startupIcon 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+                }
+                .anim-icon-1 { animation-delay: 1.5s; }
+                .anim-icon-2 { animation-delay: 1.6s; }
+                .anim-icon-3 { animation-delay: 1.7s; }
+                .anim-icon-4 { animation-delay: 1.8s; }
+                .anim-icon-5 { animation-delay: 1.9s; }
+                .anim-icon-6 { animation-delay: 1.95s; }
+                .anim-icon-7 { animation-delay: 2.0s; }
+                .anim-icon-8 { animation-delay: 2.05s; }
+            </style>
+
+            <!-- Code Snippet 1: Python -->
+            <div class="absolute top-[5%] lg:top-[10%] left-[5%] lg:left-[10%] z-10 animate-subtle-float" style="animation-delay: 0s;">
+                <div class="anim-startup-pop">
+                    <div class="playground-item bg-white/80 backdrop-blur-md border border-gray-200/60 shadow-sm rounded-xl p-3 flex flex-col min-w-[140px]" data-speed="0.04">
+                        <div class="flex items-center gap-1.5 mb-2 border-b border-gray-100/50 pb-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#ff5f56]"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#27c93f]"></span>
+                        </div>
+                        <div class="font-mono text-[11px] text-gray-700">
+                            <span class="text-purple-600">print</span>(<span class="text-green-600">"Hello"</span>)
+                        </div>
+                    </div>
                 </div>
+            </div>
 
-                <h3 class="text-xl font-bold text-gray-800 tracking-tight mb-1">Arjav Dosi</h3>
-                <p class="text-[14px] font-semibold text-blue-600 mb-6">Python & Django Developer</p>
+            <!-- Code Snippet 2: SQL (Hide on tablet) -->
+            <div class="absolute top-[20%] right-[5%] lg:right-[15%] z-10 animate-subtle-float block md:hidden lg:block" style="animation-delay: 1.5s;">
+                <div class="anim-startup-slide-right">
+                    <div class="playground-item bg-white/80 backdrop-blur-md border border-gray-200/60 shadow-sm rounded-xl p-3 flex flex-col min-w-[180px]" data-speed="0.06">
+                        <div class="flex items-center gap-1.5 mb-2 border-b border-gray-100/50 pb-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#ff5f56]"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#27c93f]"></span>
+                        </div>
+                        <div class="font-mono text-[11px] text-gray-700">
+                            <span class="text-blue-600 font-semibold">SELECT</span> * <span class="text-blue-600 font-semibold">FROM</span> projects;
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                <div class="w-full border-t border-gray-100 pt-5 text-left space-y-3.5">
-                    <p class="text-[13px] font-medium text-gray-600 flex items-center gap-2.5">
-                        <span class="text-base">📍</span> Indore, MP, India
-                    </p>
-                    <p class="text-[13px] font-medium text-gray-600 flex items-center gap-2.5">
-                        <span class="text-base">🎓</span> B.Tech Computer Science
-                    </p>
-                    <p class="text-[13px] font-medium text-gray-600 flex items-center gap-2.5">
-                        <span class="text-base">💻</span> Python • Django • Java • MySQL
-                    </p>
-                    <p class="text-[13px] font-medium text-gray-600 flex items-center gap-2.5">
-                        <span class="text-base">⭐</span> Open to Internship Opportunities
-                    </p>
+            <!-- Code Snippet 3: CSS (Hide on tablet) -->
+            <div class="absolute bottom-[25%] lg:bottom-[30%] right-[10%] lg:right-[20%] z-10 animate-subtle-float hidden lg:block" style="animation-delay: 2.5s;">
+                <div class="anim-startup-slide-up">
+                    <div class="playground-item bg-white/80 backdrop-blur-md border border-gray-200/60 shadow-sm rounded-xl p-3 flex flex-col min-w-[160px]" data-speed="0.03">
+                        <div class="flex items-center gap-1.5 mb-2 border-b border-gray-100/50 pb-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#ff5f56]"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#27c93f]"></span>
+                        </div>
+                        <div class="font-mono text-[11px] text-gray-700">
+                            <span class="text-blue-600">.hero</span> {<br>
+                            &nbsp;&nbsp;<span class="text-purple-600">display</span>: <span class="text-green-600">flex</span>;<br>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Code Snippet 4: Terminal -->
+            <div class="absolute bottom-[10%] lg:bottom-[15%] left-[10%] lg:left-[20%] z-10 animate-subtle-float" style="animation-delay: 0.8s;">
+                <div class="anim-startup-terminal">
+                    <div class="playground-item bg-gray-900/95 backdrop-blur-md border border-gray-700 shadow-sm rounded-xl p-3 flex flex-col min-w-[180px]" data-speed="0.05">
+                        <div class="flex items-center gap-1.5 mb-2 border-b border-gray-700/50 pb-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-gray-600"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-gray-600"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-gray-600"></span>
+                        </div>
+                        <div class="font-mono text-[11px] text-gray-300 flex flex-col gap-1.5 mt-1">
+                            <div class="flex items-center">
+                                <span class="text-green-400 mr-1.5">~/repo $</span>
+                                <span class="terminal-typing-container">
+                                    <span class="terminal-typing">git commit -m "Ship it"</span>
+                                </span>
+                            </div>
+                            <div class="terminal-result text-gray-400">
+                                [main] Portfolio ready ✓
+                            </div>
+                            <div class="terminal-prompt">
+                                <span class="text-green-400 mr-1.5">~/repo $</span>
+                                <span class="terminal-cursor"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tech Icons -->
+            <div class="absolute top-[45%] left-[25%] lg:left-[35%] z-20 animate-subtle-float hidden md:block" style="animation-delay: 0.2s;">
+                <div class="anim-startup-icon anim-icon-1">
+                    <div class="playground-item w-9 h-9 bg-white border border-gray-100 shadow-sm rounded-full flex items-center justify-center" data-speed="0.09">
+                        <img src="{% static 'images/skills/python.svg' %}" alt="" class="w-5 h-5 grayscale opacity-70">
+                    </div>
+                </div>
+            </div>
+
+            <div class="absolute top-[60%] left-[55%] lg:left-[60%] z-20 animate-subtle-float hidden md:block" style="animation-delay: 1.1s;">
+                <div class="anim-startup-icon anim-icon-2">
+                    <div class="playground-item w-10 h-10 bg-white border border-gray-100 shadow-sm rounded-full flex items-center justify-center" data-speed="0.07">
+                        <img src="{% static 'images/skills/java.svg' %}" alt="" class="w-6 h-6 grayscale opacity-70">
+                    </div>
+                </div>
+            </div>
+
+            <!-- MySQL (Hide on tablet) -->
+            <div class="absolute top-[30%] left-[65%] lg:left-[70%] z-20 animate-subtle-float hidden lg:flex" style="animation-delay: 2.2s;">
+                <div class="anim-startup-icon anim-icon-3">
+                    <div class="playground-item w-8 h-8 bg-white border border-gray-100 shadow-sm rounded-full flex items-center justify-center" data-speed="0.06">
+                        <img src="{% static 'images/skills/mysql.svg' %}" alt="" class="w-4 h-4 grayscale opacity-70">
+                    </div>
+                </div>
+            </div>
+
+            <!-- HTML5 (Hide on tablet) -->
+            <div class="absolute bottom-[35%] left-[15%] lg:left-[25%] z-20 animate-subtle-float hidden lg:flex" style="animation-delay: 0.5s;">
+                <div class="anim-startup-icon anim-icon-4">
+                    <div class="playground-item w-8 h-8 bg-white border border-gray-100 shadow-sm rounded-full flex items-center justify-center" data-speed="0.1">
+                        <img src="{% static 'images/skills/html5.svg' %}" alt="" class="w-4 h-4 grayscale opacity-70">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Git text badge -->
+            <div class="absolute top-[15%] left-[45%] lg:left-[50%] z-20 animate-subtle-float hidden md:block" style="animation-delay: 1.8s;">
+                <div class="anim-startup-icon anim-icon-5">
+                    <div class="playground-item bg-white border border-gray-100 shadow-sm rounded-lg px-2 py-1 text-[10px] font-bold text-gray-500 uppercase tracking-wider" data-speed="0.08">
+                        Git
+                    </div>
+                </div>
+            </div>
+
+            <!-- Django text badge -->
+            <div class="absolute bottom-[40%] right-[30%] lg:right-[40%] z-20 animate-subtle-float hidden md:block" style="animation-delay: 2.9s;">
+                <div class="anim-startup-icon anim-icon-6">
+                    <div class="playground-item bg-white border border-gray-100 shadow-sm rounded-lg px-2 py-1 text-[10px] font-bold text-gray-500 uppercase tracking-wider" data-speed="0.05">
+                        Django
+                    </div>
+                </div>
+            </div>
+
+            <!-- JS text badge (Hide on tablet) -->
+            <div class="absolute top-[75%] right-[20%] lg:right-[30%] z-20 animate-subtle-float hidden lg:flex" style="animation-delay: 1.3s;">
+                <div class="anim-startup-icon anim-icon-7">
+                    <div class="playground-item bg-white border border-gray-100 shadow-sm rounded-lg px-2 py-1 text-[10px] font-bold text-gray-500 uppercase tracking-wider" data-speed="0.07">
+                        JS
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CSS text badge (Hide on tablet) -->
+            <div class="absolute top-[25%] left-[20%] lg:left-[25%] z-20 animate-subtle-float hidden lg:flex" style="animation-delay: 0.7s;">
+                <div class="anim-startup-icon anim-icon-8">
+                    <div class="playground-item bg-white border border-gray-100 shadow-sm rounded-lg px-2 py-1 text-[10px] font-bold text-gray-500 uppercase tracking-wider" data-speed="0.06">
+                        CSS
+                    </div>
                 </div>
             </div>
         </div>
@@ -88,45 +472,70 @@
 <!-- About Section -->
 <section id="about" class="relative bg-slate-50" aria-label="About Me">
     <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-white to-slate-50"></div>
-    <div class="relative z-10 pt-24 pb-24 max-w-6xl mx-auto px-6 grid md:grid-cols-[1fr_2fr] gap-12 lg:gap-24">
-        <div class="reveal">
-            <h2 class="text-2xl font-bold text-gray-800 tracking-tight mb-4">About Me</h2>
-            <div class="h-px w-8 bg-gray-300"></div>
+    <div class="relative z-10 pt-4 pb-12 md:pt-6 md:pb-16 max-w-6xl mx-auto px-6">
+        
+        <div class="grid grid-cols-1 mb-16">
+            <div class="reveal text-center flex flex-col items-center">
+                <h2 class="text-2xl font-bold text-gray-800 tracking-tight mb-4">About Me</h2>
+                <div class="h-px w-8 bg-gray-300"></div>
+            </div>
         </div>
-
-        <div class="reveal delay-200 space-y-6 text-gray-600 leading-relaxed text-[15px]">
-            <p>
-                I am a passionate software engineer specializing in backend architecture with Python and Django. I
-                thrive on translating complex problems into elegant, highly scalable, and performant web solutions.
-            </p>
-            <p>
-                My approach marries robust server-side logic with seamless, premium user interfaces. By bridging the gap
-                between design and deep technical functionality, I ensure that the products I build don't just work
-                flawlessly—they feel exceptional to use.
-            </p>
-
-            <div class="pt-8 grid sm:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-start gap-4">
-                    <svg class="w-5 h-5 text-gray-500 shrink-0 mt-0.5" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
-                    </svg>
-                    <div>
-                        <h4 class="font-bold text-gray-800 text-sm tracking-tight mb-1">Clean Code</h4>
-                        <p class="text-xs text-gray-500">Writing maintainable and self-documenting logic.</p>
+        
+        <div class="grid md:grid-cols-[240px_1fr] lg:grid-cols-[280px_1fr] gap-12 lg:gap-16 items-start">
+            <div class="reveal">
+                <div class="w-full mx-auto no-close-button">
+                    <div class="px-6 pb-6 pt-1 flex flex-col space-y-3">
+                        <p class="text-[17px] font-medium text-gray-600 flex items-center gap-4">
+                            <span class="text-[22px] grayscale opacity-80">📍</span> Indore, MP, India
+                        </p>
+                        <p class="text-[17px] font-medium text-gray-600 flex items-center gap-4">
+                            <span class="text-[22px] grayscale opacity-80">🎓</span> B.Tech Computer Science
+                        </p>
+                        <p class="text-[17px] font-medium text-gray-600 flex items-center gap-4">
+                            <span class="text-[22px] grayscale opacity-80">💻</span> Python • Java • C++
+                        </p>
+                        <p class="text-[17px] font-medium text-gray-600 flex items-center gap-4">
+                            <span class="text-[22px] grayscale opacity-80">🌱</span> Open to Internships
+                        </p>
                     </div>
                 </div>
-                <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-start gap-4">
-                    <svg class="w-5 h-5 text-gray-500 shrink-0 mt-0.5" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4">
-                        </path>
-                    </svg>
-                    <div>
-                        <h4 class="font-bold text-gray-800 text-sm tracking-tight mb-1">Database Design</h4>
-                        <p class="text-xs text-gray-500">Architecting efficient and scalable schemas.</p>
+            </div>
+
+            <div class="reveal delay-200 space-y-8 text-gray-600 leading-loose text-[15px]">
+                <p>
+                    My journey in technology started with a simple curiosity about how things work under the hood. Today, I spend my time exploring software development and transforming logical concepts into functional tools.
+                </p>
+                <p>
+                    Whether I am designing databases, optimizing algorithms, or building user interfaces, I approach every challenge as an opportunity to learn. I focus on writing maintainable code and solving real-world problems through continuous practice and hands-on projects.
+                </p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 mt-10">
+            <div class="reveal delay-300">
+                <div class="grid sm:grid-cols-2 gap-6 items-stretch pt-2">
+                    <div class="h-full bg-[#fdfbf7] p-6 sm:p-8 rounded-2xl border border-black/[0.04] shadow-sm shadow-black/[0.03] flex items-center gap-6">
+                        <svg class="w-5 h-5 text-gray-500 shrink-0" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                        </svg>
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-sm tracking-tight mb-2">Continuous Learning</h4>
+                            <p class="text-xs text-gray-500 leading-relaxed">Actively exploring new technologies and building real-world projects.</p>
+                        </div>
+                    </div>
+                    <div class="h-full bg-[#fdfbf7] p-6 sm:p-8 rounded-2xl border border-black/[0.04] shadow-sm shadow-black/[0.03] flex items-center gap-6">
+                        <svg class="w-5 h-5 text-gray-500 shrink-0" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z">
+                            </path>
+                        </svg>
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-sm tracking-tight mb-2">Problem Solving</h4>
+                            <p class="text-xs text-gray-500 leading-relaxed">Approaching technical challenges with logic and creativity.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -137,13 +546,16 @@
 <!-- Skills Section -->
 <section id="skills" class="relative bg-white" aria-label="Technical Skills">
     <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-slate-50 to-white"></div>
-    <div class="relative z-10 pt-24 pb-24 max-w-6xl mx-auto px-6">
+    <div class="relative z-10 py-12 md:py-16 max-w-6xl mx-auto px-6">
         <div class="reveal mb-16 text-center flex flex-col items-center">
             <h2 class="text-2xl font-bold text-gray-800 tracking-tight mb-4">Technical Arsenal</h2>
-            <div class="h-px w-8 bg-gray-300"></div>
+            <div class="h-px w-8 bg-gray-300 mb-6"></div>
+            <button id="clear-filter-btn" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-[13px] font-semibold rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm" aria-label="Show All Technologies">
+                All Technologies
+            </button>
         </div>
 
-        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="skills-outer-grid grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <!-- Languages -->
             <div class="reveal delay-100 bg-brand-alt border border-black/[0.04] p-6 rounded-3xl">
                 <h3 class="text-[13px] font-bold uppercase tracking-widest text-gray-400 mb-6 flex items-center gap-2">
@@ -152,17 +564,38 @@
                             d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
                         </path>
                     </svg>
-                    Languages
+                    LANGUAGES
                 </h3>
-                <ul class="space-y-3">
-                    <li class="text-[14px] font-medium text-gray-700">Python</li>
-                    <li class="text-[14px] font-medium text-gray-700">Java</li>
-                    <li class="text-[14px] font-medium text-gray-700">C / C++</li>
-                    <li class="text-[14px] font-medium text-gray-700">JavaScript</li>
-                </ul>
+                <div class="grid-cols-2 md:grid-cols-3 gap-y-14 gap-x-8 pt-4 pb-4 items-center justify-items-center" style="display: grid;">
+                    <!-- Python -->
+                    <div class="relative flex flex-col items-center justify-center w-full skill-filter-btn cursor-pointer transition-all duration-300 ease-in-out" data-filter="python" role="button" tabindex="0" aria-pressed="false" aria-label="Filter by python">
+                        <img src="{% static 'images/skills/python.svg' %}" alt="Python" class="w-14 h-14 object-contain grayscale opacity-70 transition-all duration-250 hover:grayscale-0 hover:opacity-100 hover:drop-shadow-[0_0_12px_rgba(59,130,246,0.3)] hover:-translate-y-1 hover:scale-[1.15] ">
+                        <span class="absolute -bottom-7 text-[13px] font-medium text-[#505F4E] whitespace-nowrap pointer-events-none">Python</span>
+                    </div>
+                    <!-- Java -->
+                    <div class="relative flex flex-col items-center justify-center w-full skill-filter-btn cursor-pointer transition-all duration-300 ease-in-out" data-filter="java" role="button" tabindex="0" aria-pressed="false" aria-label="Filter by java">
+                        <img src="{% static 'images/skills/java.svg' %}" alt="Java" class="w-14 h-14 object-contain grayscale opacity-70 transition-all duration-250 hover:grayscale-0 hover:opacity-100 hover:drop-shadow-[0_0_12px_rgba(59,130,246,0.3)] hover:-translate-y-1 hover:scale-[1.15] ">
+                        <span class="absolute -bottom-7 text-[13px] font-medium text-[#505F4E] whitespace-nowrap pointer-events-none">Java</span>
+                    </div>
+                    <!-- C/C++ -->
+                    <div class="relative flex flex-col items-center justify-center w-full skill-filter-btn cursor-pointer transition-all duration-300 ease-in-out" data-filter="c" role="button" tabindex="0" aria-pressed="false" aria-label="Filter by c">
+                        <img src="{% static 'images/skills/cplusplus.svg' %}" alt="C/C++" class="w-14 h-14 object-contain grayscale opacity-70 transition-all duration-250 hover:grayscale-0 hover:opacity-100 hover:drop-shadow-[0_0_12px_rgba(59,130,246,0.3)] hover:-translate-y-1 hover:scale-[1.15] ">
+                        <span class="absolute -bottom-7 text-[13px] font-medium text-[#505F4E] whitespace-nowrap pointer-events-none">C/C++</span>
+                    </div>
+                    <!-- HTML5 -->
+                    <div class="relative flex flex-col items-center justify-center w-full skill-filter-btn cursor-pointer transition-all duration-300 ease-in-out" data-filter="html" role="button" tabindex="0" aria-pressed="false" aria-label="Filter by html">
+                        <img src="{% static 'images/skills/html5.svg' %}" alt="HTML5" class="w-14 h-14 object-contain grayscale opacity-70 transition-all duration-250 hover:grayscale-0 hover:opacity-100 hover:drop-shadow-[0_0_12px_rgba(59,130,246,0.3)] hover:-translate-y-1 hover:scale-[1.15] ">
+                        <span class="absolute -bottom-7 text-[13px] font-medium text-[#505F4E] whitespace-nowrap pointer-events-none">HTML5</span>
+                    </div>
+                    <!-- MySQL -->
+                    <div class="relative flex flex-col items-center justify-center w-full skill-filter-btn cursor-pointer transition-all duration-300 ease-in-out" data-filter="mysql" role="button" tabindex="0" aria-pressed="false" aria-label="Filter by mysql">
+                        <img src="{% static 'images/skills/mysql.svg' %}" alt="MySQL" class="w-14 h-14 object-contain grayscale opacity-70 transition-all duration-250 hover:grayscale-0 hover:opacity-100 hover:drop-shadow-[0_0_12px_rgba(59,130,246,0.3)] hover:-translate-y-1 hover:scale-[1.15] ">
+                        <span class="absolute -bottom-7 text-[13px] font-medium text-[#505F4E] whitespace-nowrap pointer-events-none">MySQL</span>
+                    </div>
+                </div>
             </div>
 
-            <!-- Frontend -->
+            <!-- Core Concepts -->
             <div class="reveal delay-200 bg-gray-50 border border-gray-200 p-8 rounded-2xl">
                 <h3 class="text-[13px] font-bold uppercase tracking-widest text-gray-400 mb-6 flex items-center gap-2">
                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -170,16 +603,33 @@
                             d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
                         </path>
                     </svg>
-                    Frontend
+                    CORE CONCEPTS
                 </h3>
-                <ul class="space-y-3">
-                    <li class="text-[14px] font-medium text-gray-700">HTML5</li>
-                    <li class="text-[14px] font-medium text-gray-700">CSS3</li>
-                    <li class="text-[14px] font-medium text-gray-700">Tailwind CSS</li>
-                </ul>
+                <div class="grid-cols-2 md:grid-cols-3 gap-y-14 gap-x-8 pt-4 pb-4 items-center justify-items-center" style="display: grid;">
+                    <!-- OOP -->
+                    <div class="relative flex flex-col items-center justify-center w-full skill-filter-btn cursor-pointer transition-all duration-300 ease-in-out" data-filter="oop" role="button" tabindex="0" aria-pressed="false" aria-label="Filter by oop">
+                        <img src="{% static 'images/skills/oop.svg' %}" alt="OOP" class="w-14 h-14 object-contain grayscale opacity-70 transition-all duration-250 hover:grayscale-0 hover:opacity-100 hover:drop-shadow-[0_0_12px_rgba(59,130,246,0.3)] hover:-translate-y-1 hover:scale-[1.15] ">
+                        <span class="absolute -bottom-7 text-[13px] font-medium text-[#505F4E] whitespace-nowrap pointer-events-none">OOP</span>
+                    </div>
+                    <!-- NumPy -->
+                    <div class="relative flex flex-col items-center justify-center w-full skill-filter-btn cursor-pointer transition-all duration-300 ease-in-out" data-filter="numpy" role="button" tabindex="0" aria-pressed="false" aria-label="Filter by numpy">
+                        <img src="{% static 'images/skills/numpy.svg' %}" alt="NumPy" class="w-14 h-14 object-contain grayscale opacity-70 transition-all duration-250 hover:grayscale-0 hover:opacity-100 hover:drop-shadow-[0_0_12px_rgba(59,130,246,0.3)] hover:-translate-y-1 hover:scale-[1.15] ">
+                        <span class="absolute -bottom-7 text-[13px] font-medium text-[#505F4E] whitespace-nowrap pointer-events-none">NumPy</span>
+                    </div>
+                    <!-- Pandas -->
+                    <div class="relative flex flex-col items-center justify-center w-full skill-filter-btn cursor-pointer transition-all duration-300 ease-in-out" data-filter="pandas" role="button" tabindex="0" aria-pressed="false" aria-label="Filter by pandas">
+                        <img src="{% static 'images/skills/pandas.svg' %}" alt="Pandas" class="w-14 h-14 object-contain grayscale opacity-70 transition-all duration-250 hover:grayscale-0 hover:opacity-100 hover:drop-shadow-[0_0_12px_rgba(59,130,246,0.3)] hover:-translate-y-1 hover:scale-[1.15] ">
+                        <span class="absolute -bottom-7 text-[13px] font-medium text-[#505F4E] whitespace-nowrap pointer-events-none">Pandas</span>
+                    </div>
+                    <!-- File & Exception Handling -->
+                    <div class="relative flex flex-col items-center justify-center w-full skill-filter-btn cursor-pointer transition-all duration-300 ease-in-out" data-filter="file-handling" role="button" tabindex="0" aria-pressed="false" aria-label="Filter by file-handling">
+                        <img src="{% static 'images/skills/file_exception.svg' %}" alt="File & Exception Handling" class="w-14 h-14 object-contain grayscale opacity-70 transition-all duration-250 hover:grayscale-0 hover:opacity-100 hover:drop-shadow-[0_0_12px_rgba(59,130,246,0.3)] hover:-translate-y-1 hover:scale-[1.15] ">
+                        <span class="absolute -bottom-10 text-center text-[13px] leading-[1.2] font-medium text-[#505F4E] w-[110px] pointer-events-none">File &amp; Exception Handling</span>
+                    </div>
+                </div>
             </div>
 
-            <!-- Backend -->
+            <!-- Java Tech -->
             <div class="reveal delay-300 bg-gray-50 border border-gray-200 p-8 rounded-2xl">
                 <h3 class="text-[13px] font-bold uppercase tracking-widest text-gray-400 mb-6 flex items-center gap-2">
                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -187,16 +637,23 @@
                             d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01">
                         </path>
                     </svg>
-                    Backend
+                    JAVA TECH
                 </h3>
-                <ul class="space-y-3">
-                    <li class="text-[14px] font-medium text-gray-700">Django</li>
-                    <li class="text-[14px] font-medium text-gray-700">MySQL</li>
-                    <li class="text-[14px] font-medium text-gray-700">SQLite</li>
-                </ul>
+                <div class="grid-cols-2 gap-y-14 gap-x-8 pt-4 pb-4 items-center justify-items-center" style="display: grid;">
+                    <!-- JDBC -->
+                    <div class="relative flex flex-col items-center justify-center w-full skill-filter-btn cursor-pointer transition-all duration-300 ease-in-out" data-filter="jdbc" role="button" tabindex="0" aria-pressed="false" aria-label="Filter by jdbc">
+                        <img src="{% static 'images/skills/jdbc.svg' %}" alt="JDBC" class="w-14 h-14 object-contain grayscale opacity-70 transition-all duration-250 hover:grayscale-0 hover:opacity-100 hover:drop-shadow-[0_0_12px_rgba(59,130,246,0.3)] hover:-translate-y-1 hover:scale-[1.15] ">
+                        <span class="absolute -bottom-7 text-[13px] font-medium text-[#505F4E] whitespace-nowrap pointer-events-none">JDBC</span>
+                    </div>
+                    <!-- JSP -->
+                    <div class="relative flex flex-col items-center justify-center w-full skill-filter-btn cursor-pointer transition-all duration-300 ease-in-out" data-filter="jsp" role="button" tabindex="0" aria-pressed="false" aria-label="Filter by jsp">
+                        <img src="{% static 'images/skills/jsp.svg' %}" alt="JSP" class="w-14 h-14 object-contain grayscale opacity-70 transition-all duration-250 hover:grayscale-0 hover:opacity-100 hover:drop-shadow-[0_0_12px_rgba(59,130,246,0.3)] hover:-translate-y-1 hover:scale-[1.15] ">
+                        <span class="absolute -bottom-7 text-[13px] font-medium text-[#505F4E] whitespace-nowrap pointer-events-none">JSP</span>
+                    </div>
+                </div>
             </div>
 
-            <!-- Tools -->
+            <!-- Future Goals -->
             <div class="reveal delay-400 bg-gray-50 border border-gray-200 p-8 rounded-2xl">
                 <h3 class="text-[13px] font-bold uppercase tracking-widest text-gray-400 mb-6 flex items-center gap-2">
                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -204,12 +661,20 @@
                             d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
                         </path>
                     </svg>
-                    Tools
+                    FUTURE FOCUS
                 </h3>
-                <ul class="space-y-3">
-                    <li class="text-[14px] font-medium text-gray-700">Git & GitHub</li>
-                    <li class="text-[14px] font-medium text-gray-700">PyCharm</li>
-                </ul>
+                <div class="grid-cols-2 gap-y-14 gap-x-8 pt-4 pb-4 items-center justify-items-center" style="display: grid;">
+                    <!-- DSA -->
+                    <div class="relative flex flex-col items-center justify-center w-full skill-filter-btn cursor-pointer transition-all duration-300 ease-in-out" data-filter="dsa" role="button" tabindex="0" aria-pressed="false" aria-label="Filter by dsa">
+                        <img src="{% static 'images/skills/dsa.svg' %}" alt="DSA" class="w-14 h-14 object-contain grayscale opacity-70 transition-all duration-250 hover:grayscale-0 hover:opacity-100 hover:drop-shadow-[0_0_12px_rgba(59,130,246,0.3)] hover:-translate-y-1 hover:scale-[1.15] ">
+                        <span class="absolute -bottom-7 text-[13px] font-medium text-[#505F4E] whitespace-nowrap pointer-events-none">DSA</span>
+                    </div>
+                    <!-- Artificial Intelligence -->
+                    <div class="relative flex flex-col items-center justify-center w-full skill-filter-btn cursor-pointer transition-all duration-300 ease-in-out" data-filter="ai" role="button" tabindex="0" aria-pressed="false" aria-label="Filter by ai">
+                        <img src="{% static 'images/skills/ai.svg' %}" alt="Artificial Intelligence" class="w-14 h-14 object-contain grayscale opacity-70 transition-all duration-250 hover:grayscale-0 hover:opacity-100 hover:drop-shadow-[0_0_12px_rgba(59,130,246,0.3)] hover:-translate-y-1 hover:scale-[1.15] ">
+                        <span class="absolute -bottom-7 text-[13px] font-medium text-[#505F4E] whitespace-nowrap pointer-events-none">Artificial Intelligence</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -218,44 +683,46 @@
 <!-- Featured Projects -->
 <section id="projects" class="relative bg-slate-50" aria-label="Featured Projects">
     <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-white to-slate-50"></div>
-    <div class="relative z-10 pt-24 pb-24 max-w-6xl mx-auto px-6">
+    <div class="relative z-10 py-12 md:py-16 max-w-6xl mx-auto px-6">
         <div class="reveal mb-16 text-center flex flex-col items-center">
             <h2 class="text-2xl font-bold text-gray-800 tracking-tight mb-4">Featured Projects</h2>
-            <div class="h-px w-8 bg-gray-300"></div>
+            <div class="h-px w-8 bg-gray-300 mb-6"></div>
+            <p id="project-filter-status" class="text-[14px] text-gray-500 font-medium" aria-live="polite">Showing all projects</p>
         </div>
 
-        <div class="grid md:grid-cols-2 gap-8">
-            <!-- Project 1 -->
-            <div
-                class="bg-white border border-black/[0.04] shadow-lg shadow-gray-100 rounded-[2rem] overflow-hidden hover:-translate-y-2 hover:shadow-2xl hover:shadow-gray-200 transition-all duration-300 flex flex-col group relative">
-                <div class="h-[250px] w-full bg-gray-50 relative overflow-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            <!-- Project 1: ShopSphere -->
+            <div class="bg-white border border-gray-200 shadow-lg shadow-gray-100/50 rounded-2xl overflow-hidden hover:-translate-y-2 hover:rotate-1 hover:shadow-xl hover:shadow-gray-300/60 transition-all duration-300 ease-in-out flex flex-col group relative project-card" data-tags="python html mysql django file-handling">
+                <div class="h-[180px] w-full bg-gray-50 relative overflow-hidden">
                     <img src="{% static 'images/projects/shopsphere.png' %}" alt="ShopSphere Screenshot" loading="lazy"
-                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                    <div
-                        class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-90 transition-opacity duration-300 group-hover:opacity-100">
-                    </div>
-                    <div class="absolute bottom-6 left-8 right-8 z-10">
-                        <span
-                            class="text-[10px] font-bold uppercase tracking-widest text-blue-400 mb-2 block">E-Commerce</span>
-                        <h3 class="text-2xl font-bold text-white tracking-tight">ShopSphere</h3>
-                    </div>
+                        class="w-full h-full object-contain object-center p-4 transition-transform duration-700 group-hover:scale-105">
                 </div>
-                <div class="p-8 flex-1 flex flex-col">
-                    <p class="text-gray-500 text-[14px] mb-6 leading-relaxed flex-1">
-                        A modern Django E-commerce platform with seamless shopping experience, robust authentication,
-                        and Razorpay integration.
+                <div class="p-6 flex-1 flex flex-col bg-white">
+                    <span
+                        class="text-[10px] font-bold uppercase tracking-widest text-blue-600 mb-2 block">E-Commerce</span>
+                    <h3 class="text-xl font-bold text-gray-800 tracking-tight mb-3 flex items-center gap-2">
+                        ShopSphere
+                        <span
+                            class="bg-yellow-100 text-yellow-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Featured</span>
+                    </h3>
+                    <p class="text-gray-500 text-[13px] mb-6 leading-relaxed line-clamp-4">
+                        A full-stack e-commerce application built with Django and MySQL. It features secure authentication, advanced product filtering, and seamless Razorpay payment integration for a complete shopping experience.
                     </p>
 
-                    <div class="flex flex-wrap gap-2 mb-8">
+                    <div class="flex flex-wrap gap-2 mb-6">
                         <span
                             class="text-xs font-semibold text-gray-600 bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-md">Django</span>
+                        <span
+                            class="text-xs font-semibold text-gray-600 bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-md">Python</span>
+                        <span
+                            class="text-xs font-semibold text-gray-600 bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-md">MySQL</span>
                         <span
                             class="text-xs font-semibold text-gray-600 bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-md">Razorpay</span>
                     </div>
 
-                    <div class="flex items-center gap-4 mt-auto pt-6 border-t border-gray-100/50">
+                    <div class="flex items-center gap-4 mt-auto pt-5 border-t border-gray-100/50">
                         <a href="#"
-                            class="bg-gray-900 text-white px-6 py-2.5 rounded-xl font-medium text-[13px] transition-all duration-300 hover:bg-black hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-lg hover:shadow-gray-900/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-900">Live
+                            class="bg-gray-900 text-white px-5 py-2 rounded-xl font-medium text-[13px] transition-all duration-300 ease-in-out hover:bg-black hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-lg hover:shadow-gray-900/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-900">Live
                             Demo</a>
                         <a href="#"
                             class="text-gray-600 hover:text-gray-900 font-medium text-[13px] transition-colors duration-300 px-2 py-1">View
@@ -264,38 +731,69 @@
                 </div>
             </div>
 
-            <!-- Project 2 -->
-            <div
-                class="bg-white border border-gray-200 shadow-lg shadow-gray-100 rounded-2xl overflow-hidden hover:-translate-y-2 hover:shadow-2xl hover:shadow-gray-200 transition-all duration-300 flex flex-col group relative">
-                <div class="h-[250px] w-full bg-gray-50 relative overflow-hidden">
-                    <img src="{% static 'images/projects/hospital-system.png' %}" alt="Hospital System Screenshot"
-                        loading="lazy"
-                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                    <div
-                        class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-90 transition-opacity duration-300 group-hover:opacity-100">
-                    </div>
-                    <div class="absolute bottom-6 left-8 right-8 z-10">
-                        <span
-                            class="text-[10px] font-bold uppercase tracking-widest text-blue-400 mb-2 block">Healthcare</span>
-                        <h3 class="text-2xl font-bold text-white tracking-tight">Hospital System</h3>
-                    </div>
+            <!-- Project 2: Laptix -->
+            <div class="bg-white border border-gray-200 shadow-lg shadow-gray-100/50 rounded-2xl overflow-hidden hover:-translate-y-2 hover:rotate-1 hover:shadow-xl hover:shadow-gray-300/60 transition-all duration-300 ease-in-out flex flex-col group relative project-card" data-tags="python html django">
+                <div class="h-[180px] w-full bg-gray-50 relative overflow-hidden">
+                    <img src="{% static 'images/projects/Laptix.png' %}" alt="Laptix Screenshot" loading="lazy"
+                        class="w-full h-full object-contain object-center p-4 transition-transform duration-700 group-hover:scale-105">
                 </div>
-                <div class="p-8 flex-1 flex flex-col">
-                    <p class="text-gray-500 text-[14px] mb-6 leading-relaxed flex-1">
-                        A comprehensive desktop application designed to streamline hospital operations, patient records,
-                        and administrative efficiency.
+                <div class="p-6 flex-1 flex flex-col bg-white">
+                    <span
+                        class="text-[10px] font-bold uppercase tracking-widest text-blue-600 mb-2 block">Technology</span>
+                    <h3 class="text-xl font-bold text-gray-800 tracking-tight mb-3">Laptix</h3>
+                    <p class="text-gray-500 text-[13px] mb-6 leading-relaxed line-clamp-4">
+                        A responsive laptop showcase platform powered by Django and Tailwind CSS. It focuses on premium user experience with smooth scroll-triggered animations and interactive product listings.
                     </p>
 
-                    <div class="flex flex-wrap gap-2 mb-8">
+                    <div class="flex flex-wrap gap-2 mb-6">
                         <span
-                            class="text-xs font-semibold text-gray-600 bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-md">Java</span>
+                            class="text-xs font-semibold text-gray-600 bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-md">Django</span>
+                        <span
+                            class="text-xs font-semibold text-gray-600 bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-md">Tailwind
+                            CSS</span>
+                        <span
+                            class="text-xs font-semibold text-gray-600 bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-md">GSAP/AOS</span>
+                    </div>
+
+                    <div class="flex items-center gap-4 mt-auto pt-5 border-t border-gray-100/50">
+                        <a href="#"
+                            class="bg-gray-900 text-white px-5 py-2 rounded-xl font-medium text-[13px] transition-all duration-300 ease-in-out hover:bg-black hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-lg hover:shadow-gray-900/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-900">Live
+                            Demo</a>
+                        <a href="#"
+                            class="text-gray-600 hover:text-gray-900 font-medium text-[13px] transition-colors duration-300 px-2 py-1">View
+                            GitHub &rarr;</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project 3: Hospital System -->
+            <div class="bg-white border border-gray-200 shadow-lg shadow-gray-100/50 rounded-2xl overflow-hidden hover:-translate-y-2 hover:rotate-1 hover:shadow-xl hover:shadow-gray-300/60 transition-all duration-300 ease-in-out flex flex-col group relative project-card" data-tags="java jsp mysql oop">
+                <div class="h-[180px] w-full bg-gray-50 relative overflow-hidden">
+                    <img src="{% static 'images/projects/hospital-system.png' %}" alt="Hospital System Screenshot"
+                        loading="lazy"
+                        class="w-full h-full object-contain object-center p-4 transition-transform duration-700 group-hover:scale-105">
+                </div>
+                <div class="p-6 flex-1 flex flex-col bg-white">
+                    <span
+                        class="text-[10px] font-bold uppercase tracking-widest text-blue-600 mb-2 block">Healthcare</span>
+                    <h3 class="text-xl font-bold text-gray-800 tracking-tight mb-3">Hospital Management System</h3>
+                    <p class="text-gray-500 text-[13px] mb-6 leading-relaxed line-clamp-4">
+                        A robust hospital management system built with Java and JSP to handle patient scheduling and clinical workflows. It features a clean separation of frontend and backend logic using MySQL for reliable data storage.
+                    </p>
+
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span
+                            class="text-xs font-semibold text-gray-600 bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-md">JSP</span>
+                        <span
+                            class="text-xs font-semibold text-gray-600 bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-md">Advanced
+                            Java</span>
                         <span
                             class="text-xs font-semibold text-gray-600 bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-md">MySQL</span>
                     </div>
 
-                    <div class="flex items-center gap-4 mt-auto pt-6 border-t border-gray-100/50">
+                    <div class="flex items-center gap-4 mt-auto pt-5 border-t border-gray-100/50">
                         <a href="#"
-                            class="bg-white border border-gray-200 text-gray-700 px-6 py-2.5 rounded-xl font-medium text-[13px] transition-all duration-300 hover:border-gray-300 hover:bg-gray-50 hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-md hover:shadow-gray-200/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-900">View
+                            class="bg-white border border-gray-200 text-gray-700 px-5 py-2 rounded-xl font-medium text-[13px] transition-all duration-300 ease-in-out hover:border-gray-300 hover:bg-gray-50 hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-md hover:shadow-gray-200/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-900">View
                             GitHub</a>
                     </div>
                 </div>
@@ -304,123 +802,322 @@
     </div>
 </section>
 
-<!-- Experience Section -->
-<section id="experience" class="relative bg-white" aria-label="Experience">
-    <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-slate-50 to-white"></div>
-    <div class="relative z-10 pt-24 pb-24 max-w-4xl mx-auto px-6">
-        <div class="reveal mb-16 text-center flex flex-col items-center">
-            <h2 class="text-2xl font-bold text-gray-800 tracking-tight mb-4">Experience</h2>
-            <div class="h-px w-8 bg-gray-300"></div>
-        </div>
 
-        <div class="relative pl-6 sm:pl-8 border-l border-gray-200 space-y-12">
-            {% for exp in experiences %}
-            <div class="relative reveal" style="transition-delay: {{ forloop.counter }}00ms;">
-                <div
-                    class="absolute -left-[31px] sm:-left-[39px] top-1.5 w-3 h-3 rounded-full border {% if exp.is_current %}border-gray-800 bg-white ring-4 ring-white{% else %}border-gray-400 bg-gray-100 ring-4 ring-white{% endif %}">
-                </div>
-                <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-1">
-                    <h3 class="text-lg font-bold text-gray-800 tracking-tight flex items-center gap-3">
-                        {{ exp.job_title }}
-                        {% if exp.is_current %}
-                        <span
-                            class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Current</span>
-                        {% endif %}
-                    </h3>
-                    <span class="text-gray-500 text-[11px] font-bold tracking-widest uppercase mt-1 sm:mt-0">{{
-                        exp.start_date }} &mdash; {{ exp.end_date }}</span>
-                </div>
-                <p class="text-gray-600 font-medium text-[14px] mb-3">{{ exp.company_name }} &bull; {{ exp.location }}
-                    <span class="text-gray-400 font-normal">({{ exp.employment_type }})</span>
-                </p>
-                <p class="text-gray-500 text-[14px] leading-relaxed mb-4 whitespace-pre-wrap">{{ exp.description }}</p>
-                {% if exp.technologies_used %}
-                <p class="text-[13px] font-semibold text-gray-700">Technologies: <span
-                        class="font-normal text-gray-500">{{ exp.technologies_used }}</span></p>
-                {% endif %}
-            </div>
-            {% empty %}
-            <p class="text-gray-500 text-[14px]">No experience records found.</p>
-            {% endfor %}
-        </div>
-    </div>
-</section>
 
 <!-- Education Section -->
-<section id="education" class="relative bg-slate-50" aria-label="Education">
-    <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-white to-slate-50"></div>
-    <div class="relative z-10 pt-24 pb-24 max-w-4xl mx-auto px-6">
-        <div class="reveal mb-16 text-center flex flex-col items-center">
+<section id="education" class="relative bg-slate-50 overflow-hidden" aria-label="Education">
+    <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-white to-slate-50 z-0"></div>
+    <div class="relative z-10 py-12 md:py-16 max-w-6xl mx-auto px-6">
+        <div class="reveal mb-16 md:mb-20 text-center flex flex-col items-center">
             <h2 class="text-2xl font-bold text-gray-800 tracking-tight mb-4">Education</h2>
             <div class="h-px w-8 bg-gray-300"></div>
         </div>
 
-        <div class="relative pl-6 sm:pl-8 border-l border-gray-200 space-y-12">
-            {% for edu in educations %}
-            <div class="relative reveal" style="transition-delay: {{ forloop.counter }}00ms;">
-                <div
-                    class="absolute -left-[31px] sm:-left-[39px] top-1.5 w-3 h-3 rounded-full border border-gray-400 bg-white ring-4 ring-brand-alt">
+        <div class="relative w-full max-w-5xl mx-auto mt-4 mb-16 md:mb-24">
+            <!-- Desktop Timeline Line -->
+            <div class="hidden md:block absolute top-full mt-10 left-0 w-full h-[2px] bg-[#505F4E]/20 z-0 reveal delay-100 -translate-y-1/2"></div>
+            
+            <!-- Mobile Timeline Line -->
+            <div class="md:hidden absolute top-0 left-[15px] w-[2px] h-full bg-[#505F4E]/20 z-0 reveal -translate-x-1/2"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 relative z-10">
+                {% for edu in educations reversed %}
+                <div class="flex flex-col group reveal relative h-full pl-10 md:pl-0" style="transition-delay: {{ forloop.counter }}00ms;">
+                    
+                    <!-- Mobile Node -->
+                    <span class="md:hidden absolute top-1/2 left-[15px] transform -translate-x-1/2 -translate-y-1/2 w-[14px] h-[14px] rounded-full bg-[#505F4E] ring-[5px] ring-slate-50 z-20 group-hover:scale-125 transition-transform duration-300"></span>
+
+                    <!-- Desktop Node -->
+                    <span class="hidden md:block absolute top-full mt-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[14px] h-[14px] rounded-full bg-[#505F4E] ring-[5px] ring-slate-50 z-20 group-hover:bg-[#3E4A3D] transition-colors group-hover:scale-125 duration-300"></span>
+
+                    <!-- Retro Card -->
+                    <div class="w-full h-full px-6 lg:px-8 pb-8 pt-4 flex flex-col bg-transparent">
+                        <div class="flex flex-col gap-1 mb-3">
+                            <h3 class="text-[16px] lg:text-[17px] font-bold text-gray-900 tracking-tight leading-tight">
+                                {% if 'B.Tech' in edu.degree %}
+                                    B.Tech Computer Science & Engineering
+                                {% elif 'XII' in edu.degree %}
+                                    Class XII (Higher Secondary)
+                                {% elif 'X' in edu.degree %}
+                                    Class X (Secondary)
+                                {% else %}
+                                    {{ edu.degree }}
+                                {% endif %}
+                            </h3>
+                            <p class="text-[13px] text-gray-700 font-semibold mt-1 flex items-center flex-wrap gap-x-1.5 gap-y-1">
+                                {{ edu.institution_name }}
+                                <span class="w-1 h-1 rounded-full bg-gray-400"></span>
+                                <span class="text-gray-500 font-medium">{{ edu.board_or_university }}</span>
+                            </p>
+                        </div>
+
+                        <span class="inline-flex items-center w-fit bg-[#505F4E]/5 text-[#505F4E] text-[11px] font-bold px-3 py-1.5 rounded-md border border-[#505F4E]/20 mb-4 tracking-wider uppercase">
+                            {{ edu.start_year }} &mdash; {{ edu.end_year }}
+                        </span>
+
+                        {% if edu.description %}
+                        <p class="text-gray-600 text-[13px] leading-relaxed whitespace-pre-wrap mb-4">{{ edu.description }}</p>
+                        {% endif %}
+
+                        {% if edu.percentage_or_cgpa %}
+                        <div class="mt-auto pt-4 border-t border-gray-200">
+                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 block">Grade / Score</span>
+                            <p class="text-[13px] text-gray-800 font-bold">{{ edu.percentage_or_cgpa }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-1">
-                    <h3 class="text-lg font-bold text-gray-800 tracking-tight">{{ edu.degree }}</h3>
-                    <span class="text-gray-500 text-[11px] font-bold tracking-widest uppercase mt-1 sm:mt-0">{{
-                        edu.start_year }} &mdash; {{ edu.end_year }}</span>
-                </div>
-                <p class="text-gray-600 font-medium text-[14px] mb-3">{{ edu.institution_name }} &bull; {{
-                    edu.board_or_university }}</p>
-                {% if edu.percentage_or_cgpa %}
-                <p class="text-gray-500 text-[13px] font-semibold mb-2">Grade: <span class="font-normal">{{
-                        edu.percentage_or_cgpa }}</span></p>
-                {% endif %}
-                {% if edu.description %}
-                <p class="text-gray-500 text-[14px] leading-relaxed whitespace-pre-wrap">{{ edu.description }}</p>
-                {% endif %}
+                {% empty %}
+                <p class="text-gray-500 text-[14px] text-center w-full col-span-full">No education records found.</p>
+                {% endfor %}
             </div>
-            {% empty %}
-            <p class="text-gray-500 text-[14px]">No education records found.</p>
-            {% endfor %}
         </div>
+
     </div>
 </section>
 
 <!-- Contact Section -->
 <section id="contact" class="relative bg-white" aria-label="Contact Form">
     <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-slate-50 to-white"></div>
-    <div class="relative z-10 pt-24 pb-24 max-w-2xl mx-auto px-6">
-        <div class="reveal mb-12 text-center">
+    <div class="relative z-10 py-12 md:py-16 max-w-6xl mx-auto px-6">
+        <div class="reveal mb-12 text-center flex flex-col items-center">
             <h2 class="text-3xl font-bold mb-4 text-gray-800 tracking-tight">Get in touch.</h2>
-            <p class="text-gray-500 text-[15px]">Have a project in mind? Looking to hire? Drop a message.</p>
+            <p class="text-gray-500 text-[15px]">Feel free to reach out if you're looking for a developer, have a question, or simply want to connect.</p>
         </div>
 
-        <div class="reveal delay-200 bg-white border border-gray-200 shadow-premium p-10 rounded-2xl">
-            <form method="POST" action="{% url 'home' %}" class="space-y-4">
-                {% csrf_token %}
-                <div class="grid md:grid-cols-2 gap-4">
-                    <div class="space-y-1.5">
-                        <label class="text-[13px] font-semibold text-gray-700 ml-1">Name</label>
-                        <input type="text" name="name" required
-                            class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-[14px] text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                            placeholder="John Doe">
+        <div class="grid md:grid-cols-2 gap-12 lg:gap-16">
+            <!-- Left Side: Contact Information Panel -->
+            <div class="reveal delay-100 contact-info-window p-6 sm:p-8 flex flex-col">
+                <div class="mb-8">
+                    <h3 class="text-2xl font-bold text-gray-800 tracking-tight mb-2">Contact Info</h3>
+                    <p class="text-gray-500 text-sm">Feel free to reach out through any of these channels.</p>
+                </div>
+
+                <div class="space-y-6 mb-8 flex-1">
+                    <!-- Email -->
+                    <div class="group flex items-center gap-4 cursor-pointer"
+                        onclick="copyToClipboard('arjav.dosi14@gmail.com', this)">
+                        <div
+                            class="w-12 h-12 bg-gray-50 border border-gray-200 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 shadow-sm group-hover:shadow-md">
+                            <svg class="w-5 h-5 text-gray-600 transition-colors group-hover:text-blue-600" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-0.5">Email</p>
+                            <p
+                                class="text-[14.5px] font-medium text-gray-800 transition-colors group-hover:text-blue-600">
+                                arjav.dosi0107@gmail.com</p>
+                        </div>
+                        <span
+                            class="copy-tooltip opacity-0 transition-opacity duration-300 text-[11px] font-bold text-green-700 bg-green-100 px-2.5 py-1 rounded-md shadow-sm border border-green-200">Copied!</span>
                     </div>
-                    <div class="space-y-1.5">
-                        <label class="text-[13px] font-semibold text-gray-700 ml-1">Email</label>
-                        <input type="email" name="email" required
-                            class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-[14px] text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                            placeholder="john@example.com">
+
+                    <!-- Phone -->
+                    <div class="group flex items-center gap-4 cursor-pointer"
+                        onclick="copyToClipboard('+919171701314', this)">
+                        <div
+                            class="w-12 h-12 bg-gray-50 border border-gray-200 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 shadow-sm group-hover:shadow-md">
+                            <svg class="w-5 h-5 text-gray-600 transition-colors group-hover:text-blue-600" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-0.5">Phone</p>
+                            <p
+                                class="text-[14.5px] font-medium text-gray-800 transition-colors group-hover:text-blue-600">
+                                +91 9479920440</p>
+                        </div>
+                        <span
+                            class="copy-tooltip opacity-0 transition-opacity duration-300 text-[11px] font-bold text-green-700 bg-green-100 px-2.5 py-1 rounded-md shadow-sm border border-green-200">Copied!</span>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="group flex items-center gap-4 ">
+                        <div
+                            class="w-12 h-12 bg-gray-50 border border-gray-200 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 shadow-sm group-hover:shadow-md">
+                            <svg class="w-5 h-5 text-gray-600 transition-colors group-hover:text-blue-600" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.243-4.243a8 8 0 1111.314 0z">
+                                </path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-0.5">Location</p>
+                            <p
+                                class="text-[14.5px] font-medium text-gray-800 transition-colors group-hover:text-blue-600">
+                                Indore, Madhya Pradesh, India</p>
+                        </div>
                     </div>
                 </div>
-                <div class="space-y-1.5">
-                    <label class="text-[13px] font-semibold text-gray-700 ml-1">Message</label>
-                    <textarea name="message" required rows="4"
-                        class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[14px] text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none"
-                        placeholder="How can I help you?"></textarea>
+
+                <div class="pt-6 border-t border-gray-200 flex flex-wrap gap-3">
+                    <a href="https://linkedin.com/in/arjav-dosi0107" target="_blank" rel="noopener noreferrer"
+                        class="flex-1 min-w-[100px] text-center bg-gray-900 text-white py-2.5 px-4 rounded-xl text-[13px] font-semibold transition-all duration-300 ease-in-out hover:bg-black hover:-translate-y-1 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2">LinkedIn</a>
+                    <a href="https://github.com/arjav-dosi14" target="_blank" rel="noopener noreferrer"
+                        class="flex-1 min-w-[100px] text-center bg-white border border-gray-200 text-gray-700 py-2.5 px-4 rounded-xl text-[13px] font-semibold transition-all duration-300 ease-in-out hover:border-gray-300 hover:bg-gray-50 hover:-translate-y-1 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2">GitHub</a>
+                    <a href="{% static 'resume/Arjav_Dosi_Resume.pdf' %}" download="Arjav_Dosi_Resume.pdf"
+                        class="flex-1 min-w-[100px] text-center bg-white border border-gray-200 text-gray-700 py-2.5 px-4 rounded-xl text-[13px] font-semibold transition-all duration-300 ease-in-out hover:border-gray-300 hover:bg-gray-50 hover:-translate-y-1 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2">Resume</a>
                 </div>
-                <button type="submit"
-                    class="w-full bg-gray-900 text-white font-medium py-3 rounded-xl transition-all duration-300 hover:bg-black hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-lg hover:shadow-gray-900/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-900">
-                    Send Message
-                </button>
-            </form>
+            </div>
+
+            <!-- Right Side: Contact Form -->
+            <div class="reveal delay-200 h-full flex flex-col">
+                <form method="POST" action="{% url 'home' %}" class="space-y-4 h-full flex flex-col p-6 sm:p-8">
+                    {% csrf_token %}
+                    <div class="grid md:grid-cols-2 gap-5">
+                        <div class="space-y-1.5">
+                            <label class="text-[13px] font-semibold text-gray-700 block">Name</label>
+                            <input type="text" name="name" required
+                                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-[14px] text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                                placeholder="John Doe">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-[13px] font-semibold text-gray-700 block">Email</label>
+                            <input type="email" name="email" required
+                                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-[14px] text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                                placeholder="john@example.com">
+                        </div>
+                    </div>
+                    <div class="space-y-1.5 flex-1 flex flex-col mb-4">
+                        <label class="text-[13px] font-semibold text-gray-700 block">Message</label>
+                        <textarea name="message" required
+                            class="w-full flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[14px] text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none"
+                            placeholder="How can I help you?"></textarea>
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-gray-900 text-white font-medium py-3 rounded-xl transition-all duration-300 ease-in-out hover:bg-black hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-lg hover:shadow-gray-900/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-900 mt-6">
+                        Send Message
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </section>
+
+<!-- Project Filtering Script -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const filterBtns = document.querySelectorAll('.skill-filter-btn');
+    const clearBtn = document.getElementById('clear-filter-btn');
+    const projectCards = document.querySelectorAll('.project-card');
+    const statusText = document.getElementById('project-filter-status');
+    const projectsSection = document.getElementById('projects');
+
+    let activeFilter = null;
+
+    function updateProjects(filterTag) {
+        let matchCount = 0;
+        let activeTagLabel = '';
+
+        if (filterTag) {
+            // Find the active button to get its label for the status text
+            const activeBtn = Array.from(filterBtns).find(btn => btn.getAttribute('data-filter') === filterTag);
+            if (activeBtn) {
+                activeTagLabel = activeBtn.querySelector('img').getAttribute('alt') || filterTag;
+            }
+        }
+
+        projectCards.forEach(card => {
+            const tags = (card.getAttribute('data-tags') || '').split(' ');
+            const matches = !filterTag || tags.includes(filterTag);
+            
+            if (matches) {
+                matchCount++;
+                card.style.display = 'flex'; // original display
+                // Force reflow
+                card.offsetHeight;
+                card.style.opacity = '1';
+                card.style.transform = 'scale(1) translateY(0)';
+            } else {
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.95) translateY(10px)';
+                // wait for transition then hide
+                setTimeout(() => {
+                    if (card.style.opacity === '0') {
+                        card.style.display = 'none';
+                    }
+                }, 300);
+            }
+        });
+
+        // Update status text
+        if (!filterTag) {
+            statusText.textContent = 'Showing all projects';
+        } else {
+            statusText.textContent = `Showing ${matchCount} ${activeTagLabel} project${matchCount !== 1 ? 's' : ''}`;
+        }
+    }
+
+    function applyFilter(filterTag) {
+        if (activeFilter === filterTag) {
+            // Toggle off
+            activeFilter = null;
+        } else {
+            activeFilter = filterTag;
+        }
+
+        filterBtns.forEach(btn => {
+            const tag = btn.getAttribute('data-filter');
+            const img = btn.querySelector('img');
+            if (activeFilter === null) {
+                // Reset to default
+                btn.classList.remove('opacity-70', 'scale-[1.05]', 'drop-shadow-[0_0_12px_rgba(59,130,246,0.8)]', 'active-filter');
+                btn.setAttribute('aria-pressed', 'false');
+                if (img) img.classList.remove('grayscale-0', 'opacity-100');
+            } else if (tag === activeFilter) {
+                // Active
+                btn.classList.remove('opacity-70');
+                btn.classList.add('scale-[1.05]', 'drop-shadow-[0_0_12px_rgba(59,130,246,0.8)]', 'active-filter');
+                btn.setAttribute('aria-pressed', 'true');
+                if (img) img.classList.add('grayscale-0', 'opacity-100');
+            } else {
+                // Inactive
+                btn.classList.remove('scale-[1.05]', 'drop-shadow-[0_0_12px_rgba(59,130,246,0.8)]', 'active-filter');
+                btn.classList.add('opacity-70');
+                btn.setAttribute('aria-pressed', 'false');
+                if (img) img.classList.remove('grayscale-0', 'opacity-100');
+            }
+        });
+
+        updateProjects(activeFilter);
+
+        // Smooth scroll to projects if a filter was selected
+        if (activeFilter && projectsSection) {
+            projectsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tag = btn.getAttribute('data-filter');
+            applyFilter(tag);
+        });
+
+        btn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                const tag = btn.getAttribute('data-filter');
+                applyFilter(tag);
+            }
+        });
+    });
+
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            applyFilter(null);
+        });
+    }
+});
+</script>
+
 {% endblock %}
